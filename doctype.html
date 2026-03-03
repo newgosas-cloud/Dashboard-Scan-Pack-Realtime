@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Scan Pack Realtime - UX/UI Mockup</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --text: #12263f;
+      --muted: #6b7a90;
+      --line: #e7edf5;
+      --primary: #2f6bff;
+      --good: #0a9f6f;
+      --warn: #ee9b00;
+      --danger: #e5484d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Noto Sans Thai", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .app {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(16, 39, 70, .05);
+    }
+    .header {
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .title h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+    .title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .row { display: grid; gap: 12px; }
+    .filters {
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      padding: 14px;
+    }
+    .field label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    select, input {
+      width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+      background:#fff; color:var(--text); font-size:13px;
+    }
+    .btn {
+      background: var(--primary); color:#fff; border:none; border-radius:10px;
+      padding: 10px 14px; cursor:pointer; font-weight:600;
+    }
+    .kpis {
+      grid-template-columns: repeat(4, minmax(210px, 1fr));
+      padding: 14px;
+    }
+    .card {
+      border:1px solid var(--line); border-radius:12px; padding:12px;
+      display:grid; gap:8px;
+    }
+    .card .label { color:var(--muted); font-size:12px; }
+    .card .value { font-size:28px; font-weight:700; }
+    .chip {
+      width:max-content; border-radius:999px; padding:4px 9px; font-size:11px; font-weight:700;
+    }
+    .good { background: #e5f8f1; color: var(--good); }
+    .warn { background: #fff4de; color: var(--warn); }
+    .danger { background: #ffe8e9; color: var(--danger); }
+    .content { grid-template-columns: 2fr 1fr; }
+    .table-wrap { padding: 12px; overflow:auto; }
+    table { width: 100%; border-collapse: collapse; font-size:13px; }
+    th, td { border-bottom:1px solid var(--line); padding:10px 8px; white-space:nowrap; text-align:left; }
+    th { color:var(--muted); font-weight:600; background:#fbfdff; position:sticky; top:0; }
+    .risk { color: var(--danger); font-weight:700; }
+    .side { padding: 12px; display:grid; gap:12px; }
+    .mini-table td, .mini-table th { padding:8px 6px; }
+    .progress {
+      height: 8px; background: #edf2f9; border-radius: 99px; overflow: hidden;
+    }
+    .bar { height:100%; background: linear-gradient(90deg, #2f6bff, #70a2ff); }
+    .tag {
+      border:1px solid var(--line); border-radius:8px; padding:3px 7px; color:var(--muted); font-size:12px;
+    }
+    .legend { display:flex; gap:8px; flex-wrap:wrap; }
+    .delta { font-size:11px; font-weight:700; }
+    .delta.up { color: var(--good); }
+    .delta.down { color: var(--danger); }
+    .risk-monitor {
+      background: linear-gradient(160deg, #1f2a44, #101827);
+      color: #eaf0ff;
+      border: 1px solid #2a3b63;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .risk-head { padding: 12px; font-size: 22px; font-weight: 800; background: #dc2f3f; }
+    .risk-body { padding: 12px; }
+    .risk-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.12); }
+    .risk-row:last-child { border-bottom:none; }
+    .risk-time { background:#c53344; padding:4px 10px; border-radius:8px; font-size:34px; font-weight:800; letter-spacing:1px; }
+
+    
+    .pack-num { font-weight:700; display:block; }
+    .pack-bar { margin-top:6px; height:6px; background:#d8dde8; border-radius:99px; overflow:hidden; }
+    .pack-fill { height:100%; background:#2f6bff; border-radius:99px; }
+    .label-print-main { color:#059669; font-weight:700; display:block; }
+    .label-print-pending { color:#f97316; font-size:12px; }
+    .ready-check { color:#16a34a; font-weight:700; }
+
+    @media (max-width: 1100px) {
+      .filters { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
+      .kpis { grid-template-columns: repeat(2, minmax(210px, 1fr)); }
+      .content { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="panel header">
+      <div class="title">
+        <h1>Dashboard Scan Pack Realtime (Mockup)</h1>
+        <p>โหมด: Operations View · อ้างอิง BRD สำหรับ KPI, Filter และการติดตามงานแพ็กแบบ near-realtime</p>
+      </div>
+      <div class="legend">
+        <span class="tag">Feature: เปิดใช้งาน (ร้านค้า A)</span>
+        <span class="tag">Auto Refresh: 10s</span>
+        <span class="tag">Last Update: 12:24:08</span>
+        <button class="btn">ส่งออกสรุปสถานะ</button>
+      </div>
+    </section>
+
+    <section class="panel row filters">
+      <div class="field"><label>Cut-off Slot รอบคำสั่งซื้อเข้า</label><select><option>06:00 - 13:00</option><option>13:00 - 18:00</option></select></div>
+      <div class="field"><label>วันที่</label><input type="date" value="2026-03-02" /></div>
+      <div class="field"><label>คลัง (Warehouse)</label><select><option>ทั้งหมด</option><option>WH-A</option><option>WH-B</option></select></div>
+      <div class="field"><label>ช่องทางขาย</label><select><option>ทั้งหมด</option><option>Shopee</option><option>Lazada</option><option>TikTok</option></select></div>
+      <div class="field"><label>ขนส่ง</label><select><option>ทั้งหมด</option><option>Kerry</option><option>Flash</option><option>J&T</option></select></div>
+      <div class="field"><label>&nbsp;</label><button class="btn" style="width:100%">อัปเดตข้อมูล</button></div>
+    </section>
+
+    <section class="panel row kpis">
+      <div class="card">
+        <div class="label">จำนวนคำสั่งซื้อในรอบนี้</div>
+        <div class="value">1,248</div>
+        <span class="chip warn">เสี่ยงสะสม +4%</span>
+        <div class="delta up">▲ +50 จากรอบเดียวกันของเมื่อวาน</div>
+      </div>
+      <div class="card">
+        <div class="label">คำสั่งซื้อที่แพ็กแล้ว / คำสั่งซื้อทั้งหมด</div>
+        <div class="value">932 / 1,248</div>
+        <div class="progress"><div class="bar" style="width:72%"></div></div>
+        <span class="chip good">Progress 72%</span>
+        <div class="delta up">▲ +42 คำสั่งซื้อ จากรอบเดียวกันของเมื่อวาน</div>
+      </div>
+      <div class="card">
+        <div class="label">ชิ้นที่แพ็กแล้ว / ชิ้นทั้งหมด</div>
+        <div class="value">8,920 / 12,400</div>
+        <span class="chip good">เป้าหมายทันรอบ</span>
+        <div class="delta up">▲ +520 ชิ้น จากรอบเดียวกันของเมื่อวาน</div>
+      </div>
+      <div class="card">
+        <div class="label">พิมพ์ใบปะหน้าแล้ว</div>
+        <div class="value">1,011 ใบ</div>
+        <span class="chip danger">ค้างพิมพ์ 237 ใบ</span>
+        <div class="delta down">▼ -30 ใบ จากรอบเดียวกันของเมื่อวาน</div>
+      </div>
+    </section>
+
+    <section class="row content">
+      <article class="panel table-wrap">
+        <h3 style="margin:4px 0 12px 2px">มุมมองปฏิบัติการแบบเรียลไทม์</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ช่องทางขาย</th>
+              <th>คลัง</th>
+              <th>ขนส่ง</th>
+              <th>คนแพ็ก</th>
+              <th>ออเดอร์ทั้งหมด</th>
+              <th>แพ็กแล้ว (ออเดอร์)</th>
+              <th>พร้อมส่ง (ออเดอร์)</th>
+              <th>ใบปะหน้า</th>
+              <th>เวลาค้างงาน (Aging)</th>
+              <th>ระดับความเสี่ยง (Risk)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Shopee</td><td>WH-A</td><td>Kerry</td><td>คุณเอ</td><td>145</td><td><span class="pack-num">132</span><div class="pack-bar"><div class="pack-fill" style="width:91%"></div></div></td><td>128</td><td><span class="label-print-main">125</span><span class="label-print-pending">(3 รอพิมพ์)</span></td><td>1.5 ชม.</td><td>ปกติ</td></tr>
+            <tr><td>Lazada</td><td>WH-A</td><td>Flash</td><td>คุณบี</td><td>198</td><td><span class="pack-num">156</span><div class="pack-bar"><div class="pack-fill" style="width:79%"></div></div></td><td>152</td><td><span class="label-print-main">148</span><span class="label-print-pending">(4 รอพิมพ์)</span></td><td>2.2 ชม.</td><td>เฝ้าระวัง</td></tr>
+            <tr><td>TikTok Shop</td><td>WH-B</td><td>J&T</td><td>คุณซี</td><td>234</td><td><span class="pack-num">178</span><div class="pack-bar"><div class="pack-fill" style="width:76%"></div></div></td><td>165</td><td><span class="label-print-main">160</span><span class="label-print-pending">(5 รอพิมพ์)</span></td><td>3.1 ชม.</td><td class="risk">เร่งด่วน</td></tr>
+            <tr><td>Website</td><td>WH-A</td><td>Thailand Post</td><td>คุณดี</td><td>89</td><td><span class="pack-num">84</span><div class="pack-bar"><div class="pack-fill" style="width:94%"></div></div></td><td><span class="ready-check">✔ 84</span></td><td><span class="label-print-main">84</span></td><td>0.8 ชม.</td><td>ปกติ</td></tr>
+            <tr><td>Shopee</td><td>WH-CNX</td><td>Ninja Van</td><td>คุณอี</td><td>167</td><td><span class="pack-num">145</span><div class="pack-bar"><div class="pack-fill" style="width:87%"></div></div></td><td>140</td><td><span class="label-print-main">138</span><span class="label-print-pending">(2 รอพิมพ์)</span></td><td>1.9 ชม.</td><td>ปกติ</td></tr>
+            <tr><td>LINE Shopping</td><td>WH-B</td><td>Kerry</td><td>คุณเอฟ</td><td>212</td><td><span class="pack-num">167</span><div class="pack-bar"><div class="pack-fill" style="width:79%"></div></div></td><td>158</td><td><span class="label-print-main">155</span><span class="label-print-pending">(3 รอพิมพ์)</span></td><td>2.7 ชม.</td><td>เฝ้าระวัง</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <aside class="side">
+        
+        <section class="risk-monitor">
+          <div style="padding:12px 12px 6px; font-size:26px; font-weight:700">มอนิเตอร์ความเสี่ยงรอบตัดส่ง</div>
+          <div class="risk-head">⚠️ เสี่ยงพลาดรอบตัดส่ง</div>
+          <div class="risk-body">
+            <div class="risk-row"><span>คำสั่งซื้อคงเหลือ:</span><strong>320</strong></div>
+            <div class="risk-row"><span>ชิ้นสินค้าคงเหลือ:</span><strong>800</strong></div>
+            <div class="risk-row"><span>เวลาคาดว่าจะเสร็จ:</span><strong>1:20 PM</strong></div>
+            <div class="risk-row" style="align-items:center"><span>เวลาที่เหลือก่อนตัดรอบ:</span><span class="risk-time">00:25:00</span></div>
+          </div>
+        </section>
+
+        <section class="panel" style="padding:12px">
+          <h3 style="margin:0 0 8px">Packer Productivity</h3>
+          <div style="font-size:11px; color:#6b7a90; margin-bottom:6px">แยกคอลัมน์คำสั่งซื้อที่แพ็กแล้ว และชิ้นที่แพ็กแล้ว</div>
+          <table class="mini-table" style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead><tr><th>คนแพ็ก</th><th>ออเดอร์</th><th>คำสั่งซื้อที่แพ็กแล้ว</th><th>ชิ้นที่แพ็กแล้ว</th></tr></thead>
+            <tbody>
+              <tr><td>คุณเอ</td><td>84</td><td>78</td><td>1,102</td></tr>
+              <tr><td>คุณบี</td><td>79</td><td>72</td><td>980</td></tr>
+              <tr><td>คุณซี</td><td>75</td><td>69</td><td>942</td></tr>
+              <tr><td>คุณดี</td><td>68</td><td>63</td><td>885</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel" style="padding:12px">
+          <h3 style="margin:0 0 8px">Alerts</h3>
+          <div class="chip danger" style="display:block; margin-bottom:8px">WH-A ใกล้ cut-off แต่ Progress ต่ำกว่า 70%</div>
+          <div class="chip warn" style="display:block; margin-bottom:8px">ช่องทาง TikTok มีใบปะหน้าค้างพิมพ์ 84 ใบ</div>
+          <div class="chip good" style="display:block;">WH-B พร้อมส่งเกินเป้าหมาย +12%</div>
+        </section>
+      </aside>
+    </section>
+  </div>
+</body>
+</html>
